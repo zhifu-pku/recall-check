@@ -1,0 +1,9 @@
+{
+  "id": "recall-check",
+  "name": "Recall Check",
+  "version": "1.1.1",
+  "minAppVersion": "1.8.7",
+  "description": "Review checkbox questions in the current note with hidden answers and readable local progress.",
+  "author": "Zhi Fu",
+  "isDesktopOnly": false
+}

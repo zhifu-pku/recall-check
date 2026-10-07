@@ -1,0 +1,73 @@
+.recall-check-modal {
+  width: min(760px, 92vw);
+}
+.recall-check-meta,
+.recall-check-hint {
+  color: var(--text-muted);
+  font-size: var(--font-ui-small);
+}
+.recall-check-card {
+  position: relative;
+  margin: 24px 0;
+  padding: 20px;
+  background: var(--background-secondary);
+  border-radius: var(--radius-m);
+  line-height: 1.9;
+  min-height: 140px;
+  overflow-wrap: anywhere;
+}
+.recall-check-mask-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.recall-check-mask {
+  position: absolute;
+  border-radius: var(--radius-s);
+  background: var(--background-modifier-border);
+}
+.recall-check-card:not(.recall-check-revealed) .recall-check-answer,
+.recall-check-card:not(.recall-check-revealed) .recall-check-answer * {
+  visibility: hidden !important;
+  user-select: none;
+  pointer-events: none;
+}
+.recall-check-revealed .recall-check-mask-layer {
+  visibility: hidden;
+}
+.recall-check-revealed .recall-check-answer {
+  background: var(--text-highlight-bg);
+  color: var(--text-normal);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  border-radius: var(--radius-s);
+}
+.recall-check-scores {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 10px;
+  margin: 12px 0;
+}
+.recall-check-scores button {
+  min-width: 0;
+  height: auto;
+  white-space: normal;
+}
+.recall-check-controls {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 10px;
+  margin: 12px 0;
+}
+.recall-check-navigation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.recall-check-exit {
+  justify-self: end;
+}
+.recall-check-loading {
+  visibility: hidden;
+}

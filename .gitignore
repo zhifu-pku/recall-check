@@ -1,0 +1,18 @@
+# Dependencies and generated bundles
+node_modules/
+main.js
+*.map
+coverage/
+
+# Local plugin state, vaults and credentials
+.obsidian/
+/data.json
+.env*
+
+# Editor, cache and operating-system files
+.idea/
+.vscode/
+.npm-cache/
+*.log
+.DS_Store
+Thumbs.db

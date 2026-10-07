@@ -1,0 +1,8 @@
+node_modules/
+main.js
+package-lock.json
+coverage/
+.git/
+
+# Preserve task-adjacent status comments in the working demo note.
+examples/*.md
