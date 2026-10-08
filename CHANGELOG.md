@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.1.3
+
+- Explicitly mark queued preference persistence as asynchronous background work; failures are already handled by the save queue.
+
 ## 1.1.2
 
 - Make the annotation preference searchable in Obsidian 1.13+ while keeping the settings UI compatible with 1.8.7+.

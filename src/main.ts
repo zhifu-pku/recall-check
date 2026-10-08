@@ -91,7 +91,7 @@ export default class RecallCheckPlugin extends Plugin {
             statuses: [...options.statuses],
             order: options.order,
           };
-          this.persist();
+          void this.persist();
         },
         async (options) => {
           const session = new ReviewSession(
