@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.1.2
+
+- Make the annotation preference searchable in Obsidian 1.13+ while keeping the settings UI compatible with 1.8.7+.
+- Use Obsidian DOM helpers for cloze answers and masks.
+- Remove CSS compatibility warnings without changing answer dimensions or mask geometry.
+- Generate signed GitHub build provenance for release assets.
+
 ## 1.1.1
 
 - Moved grading to the first row and answer/navigation controls to the second, with Finish aligned right.

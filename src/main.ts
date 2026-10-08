@@ -1,5 +1,6 @@
 import {
   getLanguage,
+  type SettingDefinitionItem,
   Plugin,
   PluginSettingTab,
   Setting,
@@ -52,6 +53,7 @@ export default class RecallCheckPlugin extends Plugin {
       .catch((error) => {
         new Notice(String(error));
       });
+    return this.saving;
   }
   setHideComments(value: boolean) {
     this.preferences.hideComments = value;
@@ -61,7 +63,7 @@ export default class RecallCheckPlugin extends Plugin {
       ...(value ? [hideStatusComments] : []),
     );
     this.app.workspace.updateOptions();
-    this.persist();
+    return this.persist();
   }
   onunload() {
     this.active?.close();
@@ -118,6 +120,24 @@ export default class RecallCheckPlugin extends Plugin {
 class RecallCheckSettings extends PluginSettingTab {
   constructor(private plugin: RecallCheckPlugin) {
     super(plugin.app, plugin);
+  }
+  // New hosts index these definitions; older hosts still use display().
+  getSettingDefinitions(): SettingDefinitionItem[] {
+    return [
+      {
+        name: ui.t('hideComments'),
+        desc: ui.t('hideDesc'),
+        control: { type: 'toggle', key: 'hideComments' },
+      },
+    ];
+  }
+  getControlValue(key: string): unknown {
+    if (key === 'hideComments') return this.plugin.preferences.hideComments;
+    return undefined;
+  }
+  async setControlValue(key: string, value: unknown): Promise<void> {
+    if (key === 'hideComments' && typeof value === 'boolean')
+      await this.plugin.setHideComments(value);
   }
   display() {
     this.containerEl.empty();

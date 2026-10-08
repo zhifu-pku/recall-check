@@ -23,7 +23,7 @@ For each new release, keep these in sync:
 - the new entry in `versions.json`, mapped to the minimum supported Obsidian version
 - release notes in `CHANGELOG.md`
 
-The current version is **1.1.1**, requiring Obsidian **1.8.7**. Documentation and author cleanup before the first public release keep that version unchanged.
+The current version is **1.1.2**, requiring Obsidian **1.8.7**.
 
 ## Publish a release when ready
 
@@ -39,11 +39,11 @@ The tag must exactly match the manifest version, with no `v` prefix:
 
 ```sh
 npm run verify
-git tag 1.1.1
-git push origin 1.1.1
+git tag 1.1.2
+git push origin 1.1.2
 ```
 
-Run these publishing commands only when ready to publish. The workflow needs GitHub Actions enabled and permission to create releases. Its `GH_TOKEN` comes from GitHub’s built-in job token; no personal access token is stored in this repository.
+Run these publishing commands only when ready to publish. The workflow needs GitHub Actions enabled and permission to create releases and signed build attestations. Its `GH_TOKEN` comes from GitHub’s built-in job token; no personal access token is stored in this repository.
 
 If publishing manually, run the same verification, create a GitHub release with the exact version tag, and attach the three root build artifacts. The source archive alone is not an installable plugin release.
 

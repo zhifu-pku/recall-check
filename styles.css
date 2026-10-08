@@ -26,9 +26,15 @@
   border-radius: var(--radius-s);
   background: var(--background-modifier-border);
 }
-.recall-check-card:not(.recall-check-revealed) .recall-check-answer,
-.recall-check-card:not(.recall-check-revealed) .recall-check-answer * {
-  visibility: hidden !important;
+.recall-check-modal
+  .recall-check-card:not(.recall-check-revealed)
+  .recall-check-answer,
+.recall-check-modal
+  .recall-check-card:not(.recall-check-revealed)
+  .recall-check-answer
+  * {
+  visibility: hidden;
+  opacity: 0;
   user-select: none;
   pointer-events: none;
 }
@@ -38,8 +44,6 @@
 .recall-check-revealed .recall-check-answer {
   background: var(--text-highlight-bg);
   color: var(--text-normal);
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
   border-radius: var(--radius-s);
 }
 .recall-check-scores {

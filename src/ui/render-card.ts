@@ -16,10 +16,10 @@ export async function renderCard(
       const text = node.textContent ?? '',
         position = text.indexOf(answer.token);
       if (position < 0) continue;
-      const cloze = body.ownerDocument.createElement('span');
+      const cloze = body.createSpan();
       cloze.className = 'recall-check-cloze';
       cloze.setAttribute('aria-label', maskLabel);
-      const content = body.ownerDocument.createElement('span');
+      const content = cloze.createSpan();
       content.className = 'recall-check-answer';
       content.setAttribute('aria-hidden', 'true');
       cloze.append(content);

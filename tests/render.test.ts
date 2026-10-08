@@ -9,17 +9,26 @@ import { renderCard } from '../src/ui/render-card';
 import { maskRects, updateMasks } from '../src/ui/answer-mask';
 function environment() {
   const dom = new JSDOM(
-    '<!DOCTYPE html><html><head></head><body><div class="recall-check-card"></div></body></html>',
+    '<!DOCTYPE html><html><head></head><body class="recall-check-modal"><div class="recall-check-card"></div></body></html>',
   );
+  // Obsidian's DOM helpers are installed on each window's HTMLElement prototype.
+  dom.window.HTMLElement.prototype.createSpan = function () {
+    const span = this.ownerDocument.createElement('span');
+    this.append(span);
+    return span;
+  };
   const style = dom.window.document.createElement('style');
   style.textContent = readFileSync(
     new URL('../styles.css', import.meta.url),
     'utf8',
   );
   dom.window.document.head.append(style);
+  const mathStyle = dom.window.document.createElement('style');
+  mathStyle.textContent = '.math { visibility: visible; }';
+  dom.window.document.head.append(mathStyle);
   return { dom, body: dom.window.document.querySelector('div')! };
 }
-test('tall math stays in layout, hidden children are invisible and full-size masks preserve width', async () => {
+test('tall math stays in layout, explicit child visibility cannot expose hidden answers, masks preserve width', async () => {
   const { dom, body } = environment();
   let formula = 0;
   await renderCard(
@@ -55,11 +64,14 @@ test('tall math stays in layout, hidden children are invisible and full-size mas
     assert.equal(mask.style.width, '160px');
     assert.ok(parseFloat(mask.style.height) > 100);
   }
-  for (const math of body.querySelectorAll('.math'))
-    assert.equal(dom.window.getComputedStyle(math).visibility, 'hidden');
-  body.classList.add('recall-check-revealed');
+  // Math renderers can force child visibility; ancestor opacity still hides it.
   for (const answer of answers)
+    assert.equal(dom.window.getComputedStyle(answer).opacity, '0');
+  body.classList.add('recall-check-revealed');
+  for (const answer of answers) {
     assert.notEqual(dom.window.getComputedStyle(answer).visibility, 'hidden');
+    assert.notEqual(dom.window.getComputedStyle(answer).opacity, '0');
+  }
   assert.equal(
     dom.window.getComputedStyle(body.querySelector('.recall-check-mask-layer')!)
       .visibility,

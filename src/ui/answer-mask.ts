@@ -75,7 +75,7 @@ function contentRects(element: HTMLElement): Rect[] {
 export function updateMasks(body: HTMLElement): void {
   let layer = body.querySelector<HTMLElement>('.recall-check-mask-layer');
   if (!layer) {
-    layer = body.ownerDocument.createElement('span');
+    layer = body.createSpan();
     layer.className = 'recall-check-mask-layer';
     layer.setAttribute('aria-hidden', 'true');
     body.append(layer);
@@ -89,7 +89,7 @@ export function updateMasks(body: HTMLElement): void {
     body.querySelectorAll<HTMLElement>('.recall-check-answer'),
   ).flatMap((answer) => maskRects(contentRects(answer), fontSize * 0.13));
   const masks = rectangles.map((rect) => {
-    const mask = body.ownerDocument.createElement('span');
+    const mask = layer.createSpan();
     mask.className = 'recall-check-mask';
     mask.style.left = `${rect.left - origin.left - body.clientLeft + body.scrollLeft}px`;
     mask.style.top = `${rect.top - origin.top - body.clientTop + body.scrollTop}px`;
