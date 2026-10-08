@@ -1,10 +1,12 @@
 import { App, Modal, Setting, Notice } from 'obsidian';
 import { Options, Status, Order } from '../types';
 import { ui } from '../i18n';
+import { reviewRangeCounts } from '../review-session';
 export class StartModal extends Modal {
   constructor(
     app: App,
     private initial: Options,
+    private source: string,
     private remember: (options: Options) => void,
     private start: (options: Options) => Promise<void>,
   ) {
@@ -17,22 +19,31 @@ export class StartModal extends Modal {
       statuses: new Set(this.initial.statuses),
     };
     this.contentEl.createEl('p', { text: ui.t('intro') });
+    const counts = reviewRangeCounts(this.source);
+    const label = (name: string, count: number) =>
+      `${name} · ${count} ${ui.t('cards')} · ${counts.total ? ((count / counts.total) * 100).toFixed(1) : '0.0'}%`;
+    this.contentEl.createEl('p', {
+      cls: 'recall-check-hint',
+      text: ui.t('rangeStats'),
+    });
     const toggles = new Map<
       string,
       { setValue: (value: boolean) => unknown }
     >();
-    new Setting(this.contentEl).setName(ui.t('all')).addToggle((t) => {
-      toggles.set('all', t);
-      t.setValue(options.all).onChange((v) => {
-        options.all = v;
-        if (v) {
-          options.statuses.clear();
-          for (const [key, toggle] of toggles)
-            if (key !== 'all') toggle.setValue(false);
-        }
-        this.remember(options);
+    new Setting(this.contentEl)
+      .setName(label(ui.t('all'), counts.all))
+      .addToggle((t) => {
+        toggles.set('all', t);
+        t.setValue(options.all).onChange((v) => {
+          options.all = v;
+          if (v) {
+            options.statuses.clear();
+            for (const [key, toggle] of toggles)
+              if (key !== 'all') toggle.setValue(false);
+          }
+          this.remember(options);
+        });
       });
-    });
     for (const status of [
       '未测试',
       '不确定',
@@ -40,17 +51,19 @@ export class StartModal extends Modal {
       '没记住',
       '记住了',
     ] as Status[])
-      new Setting(this.contentEl).setName(ui.status(status)).addToggle((t) => {
-        toggles.set(status, t);
-        t.setValue(options.statuses.has(status)).onChange((v) => {
-          if (v) {
-            options.all = false;
-            toggles.get('all')?.setValue(false);
-            options.statuses.add(status);
-          } else options.statuses.delete(status);
-          this.remember(options);
+      new Setting(this.contentEl)
+        .setName(label(ui.status(status), counts.statuses[status]))
+        .addToggle((t) => {
+          toggles.set(status, t);
+          t.setValue(options.statuses.has(status)).onChange((v) => {
+            if (v) {
+              options.all = false;
+              toggles.get('all')?.setValue(false);
+              options.statuses.add(status);
+            } else options.statuses.delete(status);
+            this.remember(options);
+          });
         });
-      });
     new Setting(this.contentEl).setName(ui.t('order')).addDropdown((d) =>
       d
         .addOptions(

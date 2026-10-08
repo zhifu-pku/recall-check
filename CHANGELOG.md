@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.2.0
+
+- Clear current-note RecallCheck status comments from the command palette or settings, with confirmation; preserve checkboxes, note content and other comments.
+- Optionally underline revealed answers, including tall math and separate text lines, without changing layout.
+- Show counts and percentages next to every review range, based on all cards in the current note.
+
 ## 1.1.3
 
 - Explicitly mark queued preference persistence as asynchronous background work; failures are already handled by the save queue.

@@ -4,6 +4,7 @@ export interface Preferences {
   statuses: Status[];
   order: Order;
   hideComments: boolean;
+  underlineAnswers: boolean;
 }
 export function readPreferences(value: unknown): Preferences {
   const data = (
@@ -19,6 +20,7 @@ export function readPreferences(value: unknown): Preferences {
     order: ['顺序', '逆序', '随机'].includes(data.order ?? '')
       ? data.order!
       : '随机',
+    underlineAnswers: data.underlineAnswers === true,
     hideComments:
       typeof data.hideComments === 'boolean' ? data.hideComments : true,
   };

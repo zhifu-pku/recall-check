@@ -79,6 +79,19 @@ test('tall math stays in layout, explicit child visibility cannot expose hidden 
   );
   for (const mask of body.querySelectorAll<HTMLElement>('.recall-check-mask'))
     assert.equal(mask.style.width, '160px');
+  body.classList.add('recall-check-underline-answers');
+  assert.equal(
+    dom.window.getComputedStyle(body.querySelector('.recall-check-mask-layer')!)
+      .visibility,
+    'visible',
+  );
+  for (const mask of body.querySelectorAll<HTMLElement>('.recall-check-mask')) {
+    assert.equal(
+      dom.window.getComputedStyle(mask).backgroundColor,
+      'rgba(0, 0, 0, 0)',
+    );
+    assert.equal(mask.style.width, '160px');
+  }
   body.classList.remove('recall-check-revealed');
   for (const answer of answers) {
     assert.equal(dom.window.getComputedStyle(answer).visibility, 'hidden');

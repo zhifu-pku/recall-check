@@ -94,6 +94,18 @@ The four saved values are `记住了` (remembered), `不确定` (uncertain), `�
 
 Cards run from a task checkbox to the next blank line; adjacent task starts also separate cards. Leave a blank line between questions for predictable formatting. Frontmatter and fenced code blocks are ignored, and inline code remains literal. Unmatched cloze delimiters remain ordinary text.
 
+### Review range counts
+
+Each range shows its card count and percentage of all cards in the current note, including checked tasks. All still counts unchecked tasks only; Remembered counts checked tasks. Counts follow the same rules as the review queue.
+
+### Underline revealed answers
+
+Enable **Settings → Recall Check → Underline revealed answers** to draw lines below the revealed blanks, including math. It is off by default and does not change answer layout.
+
+### Clear status comments
+
+Run **Clear status comments in current note** from the command palette, or use the corresponding button in **Settings → Recall Check**. Confirm the note name before clearing. This removes only RecallCheck comments above tasks, preserving checkboxes (including `[x]`), note content, code examples and other plugins’ comments. Unchecked tasks whose comments are removed become Untested; checked tasks remain Remembered.
+
 ### Show or hide annotations
 
 Status comment lines are hidden in the editor by default. Move the cursor onto a comment line to reveal and edit it. Toggle visibility in **Settings → Recall Check**, or run **Toggle status comment visibility** from the command palette. Reading view hides HTML comments through normal Markdown rendering.

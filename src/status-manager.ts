@@ -39,3 +39,12 @@ export function updateCard(
     result = result.slice(0, edit.start) + edit.text + result.slice(edit.end);
   return result;
 }
+
+/** Remove only task-owned RecallCheck comments; keep checkboxes and all other text. */
+export function clearStatusComments(source: string): string {
+  const ranges = parseCards(source).flatMap((card) => card.comments);
+  let result = source;
+  for (const range of ranges.sort((a, b) => b.start - a.start))
+    result = result.slice(0, range.start) + result.slice(range.end);
+  return result;
+}

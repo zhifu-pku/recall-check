@@ -75,3 +75,12 @@
 .recall-check-loading {
   visibility: hidden;
 }
+
+.recall-check-revealed.recall-check-underline-answers .recall-check-mask-layer {
+  visibility: visible;
+}
+.recall-check-revealed.recall-check-underline-answers .recall-check-mask {
+  background: transparent;
+  border-radius: 0;
+  border-bottom: 1px solid var(--text-normal);
+}

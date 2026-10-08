@@ -26,6 +26,7 @@ export class ReviewModal extends Modal {
     app: App,
     private file: TFile,
     private session: ReviewSession,
+    private underlineAnswers: boolean,
     private openResult: (session: ReviewSession) => void,
   ) {
     super(app);
@@ -70,6 +71,7 @@ export class ReviewModal extends Modal {
       cls: 'recall-check-card recall-check-loading markdown-rendered',
     });
     this.body = body;
+    body.toggleClass('recall-check-underline-answers', this.underlineAnswers);
     const scores = this.contentEl.createDiv({ cls: 'recall-check-scores' });
     ratings.forEach((rating, i) => {
       const b = scores.createEl('button', {

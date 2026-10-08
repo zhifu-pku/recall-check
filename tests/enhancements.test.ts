@@ -5,8 +5,12 @@ import {
   hideStatusComments,
   hiddenCommentRanges,
 } from '../src/comment-visibility';
-import { makeQueue, ReviewSession } from '../src/review-session';
-import { updateCard } from '../src/status-manager';
+import {
+  makeQueue,
+  ReviewSession,
+  reviewRangeCounts,
+} from '../src/review-session';
+import { updateCard, clearStatusComments } from '../src/status-manager';
 import { parseCards } from '../src/parser';
 import { prepareCloze } from '../src/cloze';
 import { readPreferences, optionsFrom } from '../src/settings';
@@ -90,6 +94,7 @@ test('preferences persist round trip, remembered selection and visibility; corru
     statuses: ['记住了', '不确定'],
     order: '逆序',
     hideComments: false,
+    underlineAnswers: true,
   };
   assert.deepEqual(readPreferences(JSON.parse(JSON.stringify(saved))), saved);
   assert.deepEqual(
@@ -131,4 +136,40 @@ test('English and Chinese UI packs cover statuses and orders; other languages fa
   assert.equal(createTranslator('zh').t('previous'), '上一题');
   assert.equal(createTranslator('zh-TW').order('随机'), '随机');
   assert.equal(createTranslator('fr').t('next'), 'Next');
+});
+
+test('range counts match filters including checked tasks and handle empty notes', () => {
+  const source =
+    '- [ ] a\n\n<!-- RecallCheck: 不确定 -->\n- [ ] b\n\n- [x] c\n\n<!-- RecallCheck: 没记住 -->\n- [X] d';
+  const counts = reviewRangeCounts(source);
+  assert.equal(counts.total, 4);
+  assert.equal(counts.all, 2);
+  assert.deepEqual(counts.statuses, {
+    未测试: 1,
+    记住了: 2,
+    不确定: 1,
+    有印象: 0,
+    没记住: 0,
+  });
+  assert.equal(reviewRangeCounts('').total, 0);
+  assert.equal(readPreferences(null).underlineAnswers, false);
+  assert.equal(
+    readPreferences({ underlineAnswers: 'yes' }).underlineAnswers,
+    false,
+  );
+});
+
+test('clear comments preserves checkboxes, CRLF, foreign comments, code and unowned prose', () => {
+  const source =
+    '<!-- other -->\r\n<!-- RecallCheck: 记住了 -->\r\n<!-- RecallCheck: unknown -->\r\n<!--SR:keep-->\r\n- [X] ==answer==\r\n\r\n<!-- RecallCheck: 不确定 -->\r\n- [ ] b\r\n\r\n```md\r\n<!-- RecallCheck: 没记住 -->\r\n- [ ] example\r\n```\r\n';
+  const expected =
+    '<!-- other -->\r\n<!--SR:keep-->\r\n- [X] ==answer==\r\n\r\n- [ ] b\r\n\r\n```md\r\n<!-- RecallCheck: 没记住 -->\r\n- [ ] example\r\n```\r\n';
+  assert.equal(clearStatusComments(source), expected);
+  assert.equal(clearStatusComments(expected), expected);
+  assert.equal(
+    clearStatusComments(
+      '---\ncomment: "<!-- RecallCheck: 记住了 -->"\n---\ntext',
+    ),
+    '---\ncomment: "<!-- RecallCheck: 记住了 -->"\n---\ntext',
+  );
 });

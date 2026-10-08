@@ -48,3 +48,9 @@ Automated tests additionally cover all the above core behavior and DOM masking; 
 - Open the range modal from the command or ribbon. The Start button is focused; Enter immediately starts with the saved choices. Tab navigation and typing in controls still work.
 - Reveal/hide long Chinese answers that wrap onto several lines and tall formulas. Text positions, wrapping and card height remain unchanged; gray text masks are slightly taller than the glyphs without joining between lines.
 - Resize the modal window and verify overlay geometry follows the newly wrapped text.
+
+## 1.2.0 checks
+
+- Range labels show counts and percentages of all note cards, including checked tasks. Confirm All excludes checked tasks and Remembered includes them; counts match actual session sizes. Start remains focused for Enter.
+- Enable and disable Underline revealed answers in settings, then start a new review. Reveal multiline text and tall formulas; only revealed answers show lines, with no layout jump. Reload to check persistence.
+- Run Clear status comments in current note from the command palette and from settings on a disposable note. Cancel first to verify no changes. Confirm clearing removes only task-owned RecallCheck comments; `[x]` / `[X]`, task text, line endings, code examples and foreign comments remain intact. Unchecked cards become Untested; checked cards remain Remembered.

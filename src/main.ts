@@ -16,6 +16,8 @@ import { ResultModal } from './ui/result-modal';
 import { Preferences, readPreferences, optionsFrom } from './settings';
 import { ui, setUILanguage } from './i18n';
 import { hideStatusComments } from './comment-visibility';
+import { clearStatusComments } from './status-manager';
+import { ClearCommentsModal } from './ui/clear-comments-modal';
 export default class RecallCheckPlugin extends Plugin {
   private active: StartModal | ReviewModal | ResultModal | null = null;
   preferences: Preferences = readPreferences(null);
@@ -40,6 +42,11 @@ export default class RecallCheckPlugin extends Plugin {
       id: 'toggle-status-comments',
       name: ui.t('toggleComments'),
       callback: () => this.setHideComments(!this.preferences.hideComments),
+    });
+    this.addCommand({
+      id: 'clear-current-note-status-comments',
+      name: ui.t('clearCommand'),
+      callback: () => void this.clearCurrentNote(),
     });
     this.addSettingTab(new RecallCheckSettings(this));
   }
@@ -68,6 +75,27 @@ export default class RecallCheckPlugin extends Plugin {
   onunload() {
     this.active?.close();
   }
+  async clearCurrentNote() {
+    const file = this.app.workspace.getActiveFile();
+    if (!(file instanceof TFile) || file.extension !== 'md') {
+      new Notice(ui.t('openNote'));
+      return;
+    }
+    try {
+      const source = await this.app.vault.read(file);
+      if (clearStatusComments(source) === source) {
+        new Notice(ui.t('noComments'));
+        return;
+      }
+      new ClearCommentsModal(this.app, file.basename, async () => {
+        this.active?.close();
+        await this.app.vault.process(file, clearStatusComments);
+        new Notice(ui.t('cleared'));
+      }).open();
+    } catch (error) {
+      new Notice(error instanceof Error ? error.message : String(error));
+    }
+  }
   private async begin() {
     const file = this.app.workspace.getActiveFile();
     if (!(file instanceof TFile) || file.extension !== 'md') {
@@ -84,6 +112,7 @@ export default class RecallCheckPlugin extends Plugin {
       this.active = new StartModal(
         this.app,
         optionsFrom(this.preferences),
+        source,
         (options) => {
           this.preferences = {
             ...this.preferences,
@@ -103,6 +132,7 @@ export default class RecallCheckPlugin extends Plugin {
             this.app,
             file,
             session,
+            this.preferences.underlineAnswers,
             (completed) => {
               this.active = new ResultModal(this.app, completed);
               this.active.open();
@@ -129,15 +159,40 @@ class RecallCheckSettings extends PluginSettingTab {
         desc: ui.t('hideDesc'),
         control: { type: 'toggle', key: 'hideComments' },
       },
+      {
+        name: ui.t('underlineAnswers'),
+        desc: ui.t('underlineDesc'),
+        control: { type: 'toggle', key: 'underlineAnswers' },
+      },
+      {
+        name: ui.t('clearCommand'),
+        desc: ui.t('clearDesc'),
+        render: (setting) => {
+          this.addClearButton(setting);
+        },
+      },
     ];
   }
   getControlValue(key: string): unknown {
     if (key === 'hideComments') return this.plugin.preferences.hideComments;
+    if (key === 'underlineAnswers')
+      return this.plugin.preferences.underlineAnswers;
     return undefined;
   }
   async setControlValue(key: string, value: unknown): Promise<void> {
     if (key === 'hideComments' && typeof value === 'boolean')
       await this.plugin.setHideComments(value);
+    if (key === 'underlineAnswers' && typeof value === 'boolean') {
+      this.plugin.preferences.underlineAnswers = value;
+      await this.plugin.persist();
+    }
+  }
+  private addClearButton(setting: Setting) {
+    setting.addButton((button) =>
+      button
+        .setButtonText(ui.t('clear'))
+        .onClick(() => void this.plugin.clearCurrentNote()),
+    );
   }
   display() {
     this.containerEl.empty();
@@ -149,5 +204,21 @@ class RecallCheckSettings extends PluginSettingTab {
           .setValue(this.plugin.preferences.hideComments)
           .onChange((value) => this.plugin.setHideComments(value)),
       );
+    new Setting(this.containerEl)
+      .setName(ui.t('underlineAnswers'))
+      .setDesc(ui.t('underlineDesc'))
+      .addToggle((toggle) =>
+        toggle
+          .setValue(this.plugin.preferences.underlineAnswers)
+          .onChange(async (value) => {
+            this.plugin.preferences.underlineAnswers = value;
+            await this.plugin.persist();
+          }),
+      );
+    this.addClearButton(
+      new Setting(this.containerEl)
+        .setName(ui.t('clearCommand'))
+        .setDesc(ui.t('clearDesc')),
+    );
   }
 }

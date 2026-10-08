@@ -1,5 +1,5 @@
 import { parseCards } from './parser';
-import { Options, Rating, ratings } from './types';
+import { Options, Rating, ratings, Status } from './types';
 export function makeQueue(
   source: string,
   options: Options,
@@ -58,4 +58,19 @@ export class ReviewSession {
     this.snapshot = snapshot;
     this.index++;
   }
+}
+
+/** Use the same selection rules as review so displayed counts match the queue. */
+export function reviewRangeCounts(source: string) {
+  const total = parseCards(source).length;
+  const base: Options = { all: true, statuses: new Set(), order: '顺序' };
+  const all = makeQueue(source, base).length;
+  const statuses = Object.fromEntries(
+    (['未测试', ...ratings] as Status[]).map((status) => [
+      status,
+      makeQueue(source, { ...base, all: false, statuses: new Set([status]) })
+        .length,
+    ]),
+  ) as Record<Status, number>;
+  return { total, all, statuses };
 }

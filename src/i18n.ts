@@ -36,6 +36,20 @@ const en = {
   hideDesc:
     'Only RecallCheck comments above tasks are hidden. Move the cursor onto the comment to edit it. Markdown files stay unchanged.',
   toggleComments: 'Toggle status comment visibility',
+  underlineAnswers: 'Underline revealed answers',
+  underlineDesc:
+    'Draw a line under each revealed answer to identify the blanks.',
+  rangeStats:
+    'Counts and percentages are based on all cards in this note, including checked tasks.',
+  clearCommand: 'Clear status comments in current note',
+  clearDesc: 'Remove RecallCheck status comments from the current note.',
+  clearConfirm:
+    'Remove the RecallCheck status comments from this note? Other comments and note content are preserved.',
+  keepChecks: 'Checked tasks remain checked.',
+  cancel: 'Cancel',
+  clear: 'Clear comments',
+  cleared: 'Status comments cleared.',
+  noComments: 'No RecallCheck status comments found in the current note.',
   settings: 'Recall Check',
 };
 const zh: typeof en = {
@@ -75,6 +89,18 @@ const zh: typeof en = {
   hideDesc:
     '只隐藏任务上方的 RecallCheck 注释。光标移到注释所在行时会显示，方便编辑；不会修改 Markdown 文件。',
   toggleComments: '切换状态注释显示 / 隐藏',
+  underlineAnswers: '为显示的答案加下划线',
+  underlineDesc: '显示答案时在答案下方划线，方便识别挖空位置。',
+  rangeStats: '数量及占比以当前笔记的全部卡片为基数，包含已勾选的任务。',
+  clearCommand: '清空当前笔记的状态注释',
+  clearDesc: '删除当前笔记中的 RecallCheck 状态注释。',
+  clearConfirm:
+    '要删除这篇笔记中的 RecallCheck 状态注释吗？其他注释和笔记正文会保留。',
+  keepChecks: '已勾选的任务保持勾选。',
+  cancel: '取消',
+  clear: '清空注释',
+  cleared: '状态注释已清空。',
+  noComments: '当前笔记没有 RecallCheck 状态注释。',
   settings: 'Recall Check',
 };
 export function createTranslator(language: string) {
