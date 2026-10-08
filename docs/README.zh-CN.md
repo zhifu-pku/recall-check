@@ -116,13 +116,17 @@ Recall Check 是一个轻量的 Obsidian 插件。将题目写成 checkbox，用
 
 每次评分使用 Obsidian 的 `Vault.process()` 原子读写并校验最新题目序列，区分文本相同的题目，保留无关文字的修改。复习中若题目或状态被改写、增删或重排，插件会暂停评分并提示重新开始，避免覆盖旧内容或修改错题。
 
-不使用数据库、账号、云服务、遥测或分析。插件本身不发起网络请求、不上传笔记。评分保存在本地 Markdown，插件配置只保存范围、顺序和注释可见性偏好，本轮复习记录仅保存在内存中。卸载后笔记仍然可读。
+不使用数据库、账号、云服务、遥测或分析。插件本身不发起网络请求、不上传笔记。评分保存在本地 Markdown，插件配置只保存范围、顺序、注释可见性和答案下划线偏好，本轮复习记录仅保存在内存中。卸载后笔记仍然可读。
 
 ## 安装
 
 需要 **Obsidian 1.8.7 或更新版本**。主要测试平台为桌面端，移动端兼容性尚未验证。
 
-目前还未上架社区插件目录，可以手动安装：
+已上架 [Obsidian 社区插件目录](https://community.obsidian.md/plugins/recall-check)。打开 **设置 → 第三方插件 → 浏览**，搜索 **Recall Check**，安装并启用即可，也可以从社区页面点击“Add to Obsidian”进入安装界面。
+
+### 手动安装
+
+也可从 GitHub Release 安装：
 
 1. 从 GitHub Release 获取 `main.js`、`manifest.json`、`styles.css`，或[从源码构建](DEVELOPMENT.md)。
 2. 创建 `<Vault>/.obsidian/plugins/recall-check/`，放入这三个文件。

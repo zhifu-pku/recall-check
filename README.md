@@ -116,13 +116,17 @@ Only RecallCheck’s task comments are affected. Other comments, including Easy 
 
 Each rating uses Obsidian’s atomic `Vault.process()` API and checks the latest task sequence before saving. Duplicate questions are tracked separately, and unrelated prose edits are retained. If a question or its status is edited, inserted, removed or reordered during a session, grading pauses and asks you to restart from the latest note.
 
-Recall Check has no database, account, cloud service, telemetry or analytics. It makes no network requests of its own and does not upload your notes. Ratings stay in local Markdown; only your filter, order and annotation preferences are saved in the plugin’s local configuration. Session history stays in memory. Your notes remain readable after uninstalling the plugin.
+Recall Check has no database, account, cloud service, telemetry or analytics. It makes no network requests of its own and does not upload your notes. Ratings stay in local Markdown; only your filter, order, annotation and answer underline preferences are saved in the plugin’s local configuration. Session history stays in memory. Your notes remain readable after uninstalling the plugin.
 
 ## Installation
 
 Requires **Obsidian 1.8.7 or newer**. Desktop is the primary tested target; mobile compatibility has not been verified.
 
-Recall Check has not yet been listed in the Community Plugins directory. Until it is available there:
+Install from the [Obsidian Community directory](https://community.obsidian.md/plugins/recall-check), or open **Settings → Community plugins → Browse**, search for **Recall Check**, then install and enable it.
+
+### Manual installation
+
+To install from a GitHub release:
 
 1. Download `main.js`, `manifest.json` and `styles.css` from a GitHub release, or [build them from source](docs/DEVELOPMENT.md).
 2. Create `<Vault>/.obsidian/plugins/recall-check/` and put the three files inside it.
